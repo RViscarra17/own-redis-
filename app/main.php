@@ -14,7 +14,7 @@ $pingRequest = "ping";
 $request = socket_read($client, strlen($pingRequest));
 
 if ($request) {
-    $pongResponse = "PONG\r\n";
+    $pongResponse = "+PONG\r\n";
     socket_write($client, $pongResponse, strlen($pongResponse));
 }
 
