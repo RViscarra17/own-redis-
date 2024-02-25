@@ -15,7 +15,7 @@ $request = socket_read($client, strlen($pingRequest));
 
 if ($request) {
     $pongResponse = "PONG\r\n";
-    socket_write($client, $pongResponse, strlen($pongResponse), 0);
+    socket_write($client, $pongResponse, strlen($pongResponse));
 }
 
 // socket_close($sock);
