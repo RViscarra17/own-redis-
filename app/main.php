@@ -18,6 +18,7 @@ echo "Listening on " . HOST . ":" . PORT . "\n";
 $sock = createSocket();
 bindAndListen($sock);
 
+register_shutdown_function('closeSocket', $sock);
 
 $clients = [];
 $keyValueRepository = [];
@@ -153,6 +154,11 @@ function sendInfo($client, $sock, $keyValueRepository) {
     $role = $keyValueRepository["$sock"]["role"];
     $info = "role:$role\r\n";
     sendResponse($client, formatResponse($info));
+}
+
+function closeSocket($sock) {
+    socket_close($sock);
+    echo "Socket closed\n";
 }
 
 socket_close($sock);
