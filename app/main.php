@@ -85,7 +85,7 @@ while (true) {
                         "expiry" => microtime(true) * 1000 + (int)$input[10]
                     ];
                 } else {
-                    $keyValueRepository["$client"][$input[4]] = [$input[6]];
+                    $keyValueRepository["$client"][$input[4]] = $input[6];
                 }
                 $setResponse = "+OK\r\n";
                 socket_write($client, $setResponse, strlen($setResponse));
