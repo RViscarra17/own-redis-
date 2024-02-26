@@ -13,7 +13,7 @@ $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 if ($sock === false) {
     echo "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
     exit(1);
-} 
+}
 
 if (!socket_set_option($sock, SOL_SOCKET, SO_REUSEPORT, 1)) {
     echo "socket_set_option() failed: reason: " . socket_strerror(socket_last_error($sock)) . "\n";
@@ -38,7 +38,7 @@ echo "Linstening on " . HOST . ":" . PORT . "\n";
 
 $clients = [];
 
-while(true) {
+while (true) {
     $read = $clients;
     $read[] = $sock;
     $write = $except = null;
@@ -55,21 +55,35 @@ while(true) {
 
     foreach ($read as $client) {
         $request = socket_read($client, 1024);
-        if ($request === false) {
-            $key = array_search($client, $clients);
-            unset($clients[$key]);
-            echo "Client disconnected\n";
-            continue;
-        }
+        $input = parseInput($request);
 
-        echo "Request: " . $request . "\n";
-        if ($request === "*1\r\n$4\r\nping\r\n") {
-            $pongResponse = "+PONG\r\n";
-            socket_write($client, $pongResponse, strlen($pongResponse));
+        if (!empty($input[0])) {
+            if ($input[2] === "exit") {
+                $key = array_search($client, $clients);
+                unset($clients[$key]);
+                echo "Client disconnected\n";
+                continue;
+            }
+
+            if ($input[2] === "ping") {
+                $pongResponse = "+PONG\r\n";
+                socket_write($client, $pongResponse, strlen($pongResponse));
+                echo "Pong sent\n";
+            }
+
+            if ($input[2] === "echo") {
+                $echoResponse = "$" . strlen($input[4]) . "\r\n" . $input[4] . "\r\n";
+                socket_write($client, $echoResponse, strlen($echoResponse));
+                echo "Echo sent\n";
+            }
         }
     }
-    
 }
 
+function parseInput($input)
+{
+    return explode("\r\n", strtolower($input));
+}
+
+
 socket_close($sock);
-?>
