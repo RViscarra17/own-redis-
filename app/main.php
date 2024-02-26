@@ -7,7 +7,13 @@ echo "Logs from your program will appear here";
 
 set_time_limit(0);
 const HOST = 'localhost';
-const PORT = 6379;
+
+if (isset($argv[1]) && ($argv[1] === "-p" || $argv[1] === "--port")) {
+    define("PORT", $argv[2]);
+} else {
+    define("PORT", 6379);
+}
+
 ob_implicit_flush();
 $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 if ($sock === false) {
