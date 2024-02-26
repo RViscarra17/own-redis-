@@ -79,7 +79,14 @@ while (true) {
             }
 
             if ($input[2] === "set") {
-                $keyValueRepository["$client"][$input[4]] = $input[6];
+                if (isset($input[8]) && $input[8] === "px") {
+                    $keyValueRepository["$client"][$input[4]] = [
+                        "value" => $input[6],
+                        "expiry" => microtime(true) * 1000 + (int)$input[10]
+                    ];
+                } else {
+                    $keyValueRepository["$client"][$input[4]] = [$input[6]];
+                }
                 $setResponse = "+OK\r\n";
                 socket_write($client, $setResponse, strlen($setResponse));
                 echo "Set response sent\n";
@@ -88,7 +95,14 @@ while (true) {
             if ($input[2] === "get") {
                 $value = $keyValueRepository["$client"][$input[4]] ?? null;
                 if ($value) {
-                    $getResponse = "$" . strlen($value) . "\r\n" . $value . "\r\n";
+                    if(isset($value["expiry"]) && $value["expiry"] < microtime(true) * 1000) {
+                        unset($keyValueRepository["$client"][$input[4]]);
+                        $getResponse = "$-1\r\n";
+                    } else if(is_array($value)) {
+                        $getResponse = "$" . strlen($value[0]) . "\r\n" . $value[0] . "\r\n";
+                    } else if(is_string($value)) {
+                        $getResponse = "$" . strlen($value) . "\r\n" . $value . "\r\n";
+                    }
                 } else {
                     $getResponse = "$-1\r\n";
                 }
