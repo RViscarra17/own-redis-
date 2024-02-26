@@ -68,6 +68,7 @@ while(true) {
             socket_write($client, $pongResponse, strlen($pongResponse));
         }
     }
+    
 }
 
 socket_close($sock);
