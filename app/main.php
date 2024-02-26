@@ -149,7 +149,7 @@ function getKeyValue($client, $input, &$keyValueRepository) {
 function sendInfo($client, $sock, $keyValueRepository) {
     $role = $keyValueRepository["$sock"]["role"];
     $info = "role:$role\r\n";
-    sendResponse($sock, formatResponse($info));
+    sendResponse($client, formatResponse($info));
 }
 
 socket_close($sock);
