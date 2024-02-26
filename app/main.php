@@ -37,6 +37,7 @@ echo "Server started\n";
 echo "Linstening on " . HOST . ":" . PORT . "\n";
 
 $clients = [];
+$keyValueRepository = [];
 
 while (true) {
     $read = $clients;
@@ -75,6 +76,24 @@ while (true) {
                 $echoResponse = "$" . strlen($input[4]) . "\r\n" . $input[4] . "\r\n";
                 socket_write($client, $echoResponse, strlen($echoResponse));
                 echo "Echo sent\n";
+            }
+
+            if ($input[2] === "set") {
+                $keyValueRepository["$client"][$input[4]] = $input[6];
+                $setResponse = "+OK\r\n";
+                socket_write($client, $setResponse, strlen($setResponse));
+                echo "Set response sent\n";
+            }
+
+            if ($input[2] === "get") {
+                $value = $keyValueRepository["$client"][$input[4]] ?? null;
+                if ($value) {
+                    $getResponse = "$" . strlen($value) . "\r\n" . $value . "\r\n";
+                } else {
+                    $getResponse = "$-1\r\n";
+                }
+                socket_write($client, $getResponse, strlen($getResponse));
+                echo "Get response sent\n";
             }
         }
     }
