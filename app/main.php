@@ -13,11 +13,11 @@ if (isset($argv[1]) && ($argv[1] === "-p" || $argv[1] === "--port")) {
 
 echo "port: " . PORT . "\n";
 
+echo "Server started\n";
+echo "Listening on " . HOST . ":" . PORT . "\n";
 $sock = createSocket();
 bindAndListen($sock);
 
-echo "Server started\n";
-echo "Listening on " . HOST . ":" . PORT . "\n";
 
 $clients = [];
 $keyValueRepository = [];
