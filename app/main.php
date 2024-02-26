@@ -18,6 +18,10 @@ echo "Listening on " . HOST . ":" . PORT . "\n";
 
 $clients = [];
 $keyValueRepository = [];
+$keyValueRepository["$sock"] = [
+    "role" => "master",
+    "connected_clients" => 0
+];
 
 while (true) {
     $read = $clients;
@@ -59,6 +63,8 @@ while (true) {
                 case "get":
                     getKeyValue($client, $input, $keyValueRepository);
                     break;
+                case "info":
+                    sendInfo($client, $sock, $keyValueRepository);
             }
         }
     }
@@ -138,6 +144,12 @@ function getKeyValue($client, $input, &$keyValueRepository) {
         $getResponse = "$-1\r\n";
     }
     sendResponse($client, $getResponse);
+}
+
+function sendInfo($client, $sock, $keyValueRepository) {
+    $role = $keyValueRepository["$sock"]["role"];
+    $info = "role:$role\r\n";
+    sendResponse($sock, formatResponse($info));
 }
 
 socket_close($sock);
