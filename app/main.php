@@ -99,7 +99,7 @@ while (true) {
                         unset($keyValueRepository["$client"][$input[4]]);
                         $getResponse = "$-1\r\n";
                     } else if(is_array($value)) {
-                        $getResponse = "$" . strlen($value[0]) . "\r\n" . $value[0] . "\r\n";
+                        $getResponse = "$" . strlen($value["value"]) . "\r\n" . $value["value"] . "\r\n";
                     } else if(is_string($value)) {
                         $getResponse = "$" . strlen($value) . "\r\n" . $value . "\r\n";
                     }
