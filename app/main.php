@@ -26,6 +26,8 @@ for ($i = 1; $i < $argc; $i++) {
     }
 }
 
+echo "Port: $port\n";
+
 define("PORT", $port);
 define("MASTER_HOST", $master_host);
 define("MASTER_PORT", $master_port);
