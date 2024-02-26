@@ -3,6 +3,7 @@
 error_reporting(E_ALL);
 
 set_time_limit(0);
+print_r($argv);
 const HOST = 'localhost';
 if (isset($argv[1]) && ($argv[1] === "-p" || $argv[1] === "--port")) {
     define("PORT", $argv[2]);
