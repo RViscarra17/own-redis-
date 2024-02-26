@@ -4,34 +4,13 @@ error_reporting(E_ALL);
 
 set_time_limit(0);
 const HOST = 'localhost';
-define("DEFAULT_PORT", 6379);
-$port = DEFAULT_PORT;
-$master_host = null;
-$master_port = null;
-
-for ($i = 1; $i < $argc; $i++) {
-    switch ($argv[$i]) {
-        case '--port':
-        case '-p':
-            if (isset($argv[$i + 1])) {
-                $port = $argv[++$i];
-            }
-            break;
-        case '--replicaof':
-            if (isset($argv[$i + 1]) && isset($argv[$i + 2])) {
-                $master_host = $argv[++$i];
-                $master_port = $argv[++$i];
-            }
-            break;
-    }
+if (isset($argv[1]) && ($argv[1] === "-p" || $argv[1] === "--port")) {
+    define("PORT", $argv[2]);
+} else {
+    define("PORT", 6379);
 }
 
-echo "Port: $port\n";
-
-define("PORT", $port);
-define("MASTER_HOST", $master_host);
-define("MASTER_PORT", $master_port);
-define("ROLE", MASTER_HOST ? "slave" : "master");
+echo "port: " . PORT . "\n";
 
 $sock = createSocket();
 bindAndListen($sock);
@@ -42,7 +21,7 @@ echo "Listening on " . HOST . ":" . PORT . "\n";
 $clients = [];
 $keyValueRepository = [];
 $keyValueRepository["$sock"] = [
-    "role" => ROLE,
+    "role" => "master",
     "connected_clients" => 0
 ];
 
