@@ -10,7 +10,7 @@ socket_set_option($sock, SOL_SOCKET, SO_REUSEPORT, 1);
 socket_bind($sock, "localhost", 6379);
 socket_listen($sock, 5);
 $client = socket_accept($sock); // Wait for first client
-$pingRequest = "ping";
+$pingRequest = "*1\r\n$4\r\nping\r\n";
 $request = socket_read($client, strlen($pingRequest));
 
 if ($request) {
