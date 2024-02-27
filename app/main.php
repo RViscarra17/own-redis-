@@ -32,7 +32,7 @@ define("PORT", $port);
 define("MASTER_HOST", $master_host);
 define("MASTER_PORT", $master_port);
 define("ROLE", $current_role ?? "master");
-$master_info = null;
+$master_info = [];
 if (ROLE === "master") {
     $master_info = [
         "master_replid" => "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb",
