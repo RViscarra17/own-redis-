@@ -131,18 +131,6 @@ function bindAndListen($sock) {
         exit(1);
     }
 
-    if (ROLE === "slave") {
-        if (!socket_connect($sock, MASTER_HOST, MASTER_PORT)) {
-            echo "socket_connect() failed: reason: " . socket_strerror(socket_last_error($sock)) . "\n";
-            exit(1);
-        }
-    
-        $ping_message = "*1\r\n$4\r\nping\r\n";
-        socket_write($sock, $ping_message, strlen($ping_message));
-    
-        echo "Connected to master at " . MASTER_HOST . ":" . MASTER_PORT . "\n";
-    }
-
     socket_set_nonblock($sock);
 }
 
