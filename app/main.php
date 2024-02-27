@@ -32,6 +32,13 @@ define("PORT", $port);
 define("MASTER_HOST", $master_host);
 define("MASTER_PORT", $master_port);
 define("ROLE", $current_role ?? "master");
+$master_info = null;
+if (ROLE === "master") {
+    $master_info = [
+        "master_replid" => "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb",
+        "master_repl_offset" => 0,
+    ];
+}
 
 
 echo "port: " . PORT . "\n";
@@ -47,8 +54,9 @@ $clients = [];
 $keyValueRepository = [];
 $keyValueRepository["$sock"] = [
     "role" => ROLE,
-    "connected_clients" => 0
 ];
+
+$keyValueRepository["$sock"] = array_merge($keyValueRepository["$sock"], $master_info);
 
 while (true) {
     $read = $clients;
@@ -174,8 +182,10 @@ function getKeyValue($client, $input, &$keyValueRepository) {
 }
 
 function sendInfo($client, $sock, $keyValueRepository) {
-    $role = $keyValueRepository["$sock"]["role"];
-    $info = "role:$role\r\n";
+    $info = '';
+    foreach ($keyValueRepository["$sock"] as $attribute => $value) {
+        $info .= "$attribute:$value\r\n";
+    }
     sendResponse($client, formatResponse($info));
 }
 
