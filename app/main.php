@@ -81,7 +81,7 @@ function createSocket() {
         exit(1);
     }
 
-    if (!socket_set_option($sock, SOL_SOCKET, SO_REUSEPORT, 1)) {
+    if (!socket_set_option($sock, SOL_SOCKET, SO_REUSEADDR, 1)) {
         echo "socket_set_option() failed: reason: " . socket_strerror(socket_last_error($sock)) . "\n";
         exit(1);
     }
